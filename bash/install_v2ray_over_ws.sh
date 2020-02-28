@@ -58,6 +58,19 @@ cat>/etc/nginx/conf.d/v2ray.conf<<EOF
             root   /var/www/wwwroot/fake_site;
             index  index.html index.html;
         }
+
+        location /subscribe { 
+            proxy_redirect off;
+            proxy_pass http://127.0.0.1:8678; 
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host \$http_host;
+
+            # Show realip in v2ray access.log
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        }
     }
 
     server {
